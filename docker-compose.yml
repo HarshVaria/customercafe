@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: cafe-backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      # Provide MongoDB Atlas URI here for production!
+      - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/contactless-cafe}
+      - JWT_SECRET=${JWT_SECRET:-cafe_super_secret_key_prod_2024}
+      - JWT_EXPIRE=7d
+      # AWS ENV VARS
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+    ports:
+      - "5000:5000"
+    networks:
+      - cafe-network
+
+  customer-app:
+    build:
+      context: ./frontend/customer-app
+    container_name: cafe-customer-app
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - cafe-network
+
+  kitchen-dashboard:
+    build:
+      context: ./frontend/kitchen-dashboard
+    container_name: cafe-kitchen-dashboard
+    restart: always
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
+    networks:
+      - cafe-network
+
+  owner-dashboard:
+    build:
+      context: ./frontend/owner-dashboard
+    container_name: cafe-owner-dashboard
+    restart: always
+    ports:
+      - "8082:80"
+    depends_on:
+      - backend
+    networks:
+      - cafe-network
+
+networks:
+  cafe-network:
+    driver: bridge
