@@ -41,7 +41,7 @@ services:
     container_name: cafe-kitchen-dashboard
     restart: always
     ports:
-      - "8081:80"
+      - "8083:80"
     depends_on:
       - backend
     networks:

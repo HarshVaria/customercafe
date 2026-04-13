@@ -37,7 +37,7 @@ const Dashboard = ({ onLogout }) => {
     localStorage.removeItem('user');
     navigate('/login');
   };
-
+  const tabs = [
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'inventory', label: 'Inventory', icon: PackageSearch },
     { id: 'qr', label: 'QR Codes', icon: QrCode },

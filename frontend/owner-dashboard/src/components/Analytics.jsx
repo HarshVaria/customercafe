@@ -11,7 +11,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  Legend,
   Filler
 } from 'chart.js';
 import { getRevenueAnalytics, getPopularItems, getPeakHours, getTableOrders, getIngredientAnalytics } from '../services/api';
@@ -21,7 +20,6 @@ import {
   BarChart3, 
   Activity, 
   PieChart, 
-  Trophy, 
   Trophy, 
   Utensils,
   Loader2,
