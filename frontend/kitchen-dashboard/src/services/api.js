@@ -28,16 +28,16 @@ export const login = async (credentials) => {
     console.log('📡 API: Sending login request...');
     console.log('URL:', `${API_BASE_URL}/auth/login`);
     console.log('Credentials:', credentials);
-    
+
     const response = await api.post('/auth/login', credentials);
-    
+
     console.log('📡 API: Login response received:', response.data);
-    
+
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
-    
+
     console.log('✅ Token saved to localStorage');
-    
+
     return response.data;
   } catch (error) {
     console.error('📡 API: Login failed');
