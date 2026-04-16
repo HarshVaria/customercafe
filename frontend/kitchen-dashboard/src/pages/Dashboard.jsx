@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getOrders, updateOrderStatus } from '../services/api';
+import { getOrders, updateOrderStatus, getKitchenStatus, updateKitchenStatus } from '../services/api';
 import InventoryOverride from '../components/InventoryOverride';
 import { 
   ChefHat, 
@@ -15,7 +15,6 @@ import {
   Scale,
   Power
 } from 'lucide-react';
-import { getKitchenStatus, updateKitchenStatus, getOrders, updateOrderStatus } from '../services/api';
 
 const Dashboard = ({ onLogout }) => {
   const [allOrders, setAllOrders] = useState([]);
