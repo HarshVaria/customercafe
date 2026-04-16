@@ -5,6 +5,7 @@ import MenuManagement from '../components/MenuManagement';
 import Analytics from '../components/Analytics';
 import OrderHistory from '../components/OrderHistory';
 import Inventory from '../components/Inventory';
+import { getKitchenStatus } from '../services/api';
 import { 
   BarChart3, 
   QrCode, 
@@ -13,12 +14,14 @@ import {
   LogOut, 
   Store, 
   UserCircle,
-  PackageSearch 
+  PackageSearch,
+  ChefHat
 } from 'lucide-react';
 
 const Dashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('analytics');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [kitchenOnline, setKitchenOnline] = useState(false);
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -29,6 +32,19 @@ const Dashboard = ({ onLogout }) => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Poll kitchen status
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const res = await getKitchenStatus();
+        setKitchenOnline(res.isAvailable);
+      } catch (err) {}
+    };
+    fetchStatus();
+    const interval = setInterval(fetchStatus, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = () => {
@@ -93,6 +109,16 @@ const Dashboard = ({ onLogout }) => {
 
             {/* User Profile & Action */}
             <div className="flex items-center space-x-4 border-l border-slate-200 pl-4">
+              {/* Kitchen Status Badge */}
+              <div className={`hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-full border ${kitchenOnline ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+                <ChefHat className="w-3.5 h-3.5" />
+                <span className="text-xs font-bold">{kitchenOnline ? 'Kitchen Online' : 'Kitchen Offline'}</span>
+                <span className={`relative flex h-2 w-2 ml-0.5`}>
+                  {kitchenOnline && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>}
+                  <span className={`relative inline-flex rounded-full h-2 w-2 ${kitchenOnline ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
+                </span>
+              </div>
+              
               <div className="hidden sm:flex items-center space-x-2">
                 <div className="text-right">
                   <p className="text-xs font-medium text-slate-500">Welcome,</p>

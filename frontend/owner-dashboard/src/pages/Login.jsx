@@ -4,10 +4,9 @@ import { login } from '../services/api';
 import { Coffee, Lock, User, AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
 
 const Login = ({ onLogin }) => {
-  // Pre-filled for demo/ease of use, removing the need for the "credentials" UI box
   const [credentials, setCredentials] = useState({
-    username: 'owner',
-    password: 'owner123'
+    username: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     enum: ['owner', 'kitchen'],
     required: true
   },
+  isAvailable: {
+    type: Boolean,
+    default: true // Default true so they accept orders by default upon login
+  },
   cafeName: {
     type: String,
     default: 'My Cafe'

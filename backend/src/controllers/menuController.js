@@ -62,6 +62,10 @@ exports.createMenuItem = async (req, res) => {
       req.body.image = req.file.location; // S3 URL
     }
     
+    if (typeof req.body.recipe === 'string') {
+      req.body.recipe = JSON.parse(req.body.recipe);
+    }
+    
     const menuItem = await MenuItem.create(req.body);
 
     res.status(201).json({
@@ -84,6 +88,10 @@ exports.updateMenuItem = async (req, res) => {
   try {
     if (req.file) {
       req.body.image = req.file.location; // S3 URL
+    }
+
+    if (typeof req.body.recipe === 'string') {
+      req.body.recipe = JSON.parse(req.body.recipe);
     }
 
     const menuItem = await MenuItem.findByIdAndUpdate(

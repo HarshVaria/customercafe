@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { recordVisit } from '../services/api';
 import { 
   Store, 
   ArrowRight, 
@@ -13,6 +14,15 @@ import {
 const TableNumber = () => {
   const [tableNumber, setTableNumber] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Record a visit as soon as the app loads on a customer's phone
+    const hasRecorded = sessionStorage.getItem('visitRecorded');
+    if (!hasRecorded) {
+      recordVisit();
+      sessionStorage.setItem('visitRecorded', 'true');
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -39,4 +39,13 @@ export const getOrdersByTable = async (tableNumber) => {
   }
 };
 
+export const recordVisit = async () => {
+  try {
+    const response = await api.post('/analytics/visit');
+    return response.data;
+  } catch (error) {
+    console.error('Error recording visit:', error);
+  }
+};
+
 export default api;

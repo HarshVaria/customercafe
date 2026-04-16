@@ -12,8 +12,10 @@ import {
   CheckCircle2,
   Receipt,
   Loader2,
-  Scale
+  Scale,
+  Power
 } from 'lucide-react';
+import { getKitchenStatus, updateKitchenStatus, getOrders, updateOrderStatus } from '../services/api';
 
 const Dashboard = ({ onLogout }) => {
   const [allOrders, setAllOrders] = useState([]);
@@ -21,16 +23,38 @@ const Dashboard = ({ onLogout }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showOverride, setShowOverride] = useState(false);
   const [filterStatus, setFilterStatus] = useState('Pending');
+  const [isKitchenOnline, setIsKitchenOnline] = useState(true);
   const navigate = useNavigate();
 
   const statuses = ['Pending', 'Preparing', 'Ready', 'Served', 'Cancelled'];
 
   useEffect(() => {
     loadOrders();
+    checkKitchenStatus();
     // Poll every 5 seconds for new orders
     const interval = setInterval(() => loadOrders(false), 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const checkKitchenStatus = async () => {
+    try {
+      const res = await getKitchenStatus();
+      setIsKitchenOnline(res.isAvailable);
+    } catch (e) {}
+  };
+
+  const handleToggleKitchenStatus = async () => {
+    try {
+      const newStatus = !isKitchenOnline;
+      // Optimistic update
+      setIsKitchenOnline(newStatus);
+      await updateKitchenStatus(newStatus);
+    } catch (error) {
+      // Revert if failed
+      setIsKitchenOnline((prev) => !prev);
+      console.error('Error toggling kitchen status', error);
+    }
+  };
 
   const loadOrders = async (showRefreshIndicator = true) => {
     try {
@@ -116,7 +140,19 @@ const Dashboard = ({ onLogout }) => {
             </div>
           </div>
           
-          <div className="flex items-center space-x-3 w-full md:w-auto">
+          <div className="flex items-center space-x-3 w-full md:w-auto mt-4 md:mt-0">
+            <button
+              onClick={handleToggleKitchenStatus}
+              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm ${
+                isKitchenOnline 
+                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100' 
+                  : 'bg-slate-100 border border-slate-300 text-slate-500 hover:bg-slate-200'
+              }`}
+            >
+              <Power className={`w-4 h-4 ${isKitchenOnline ? 'text-emerald-500' : 'text-slate-400'}`} />
+              <span className="hidden sm:inline">{isKitchenOnline ? 'Accepting Orders' : 'Offline'}</span>
+            </button>
+            <div className="w-px h-8 bg-slate-200 mx-1 hidden sm:block"></div>
             <button
               onClick={() => loadOrders(true)}
               disabled={isRefreshing}

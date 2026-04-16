@@ -13,7 +13,7 @@ import {
   Legend,
   Filler
 } from 'chart.js';
-import { getRevenueAnalytics, getPopularItems, getPeakHours, getTableOrders, getIngredientAnalytics } from '../services/api';
+import { getRevenueAnalytics, getPopularItems, getPeakHours, getTableOrders, getIngredientAnalytics, getVisitors } from '../services/api';
 import { 
   TrendingUp, 
   ShoppingBag, 
@@ -51,6 +51,7 @@ const Analytics = () => {
   const [peakHours, setPeakHours] = useState([]);
   const [tableOrders, setTableOrders] = useState([]);
   const [ingredientStats, setIngredientStats] = useState([]);
+  const [visitors, setVisitors] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -60,12 +61,13 @@ const Analytics = () => {
   const loadAnalytics = async () => {
     try {
       setLoading(true);
-      const [revenueData, itemsData, hoursData, tablesData, ingredientsData] = await Promise.all([
+      const [revenueData, itemsData, hoursData, tablesData, ingredientsData, visitorsData] = await Promise.all([
         getRevenueAnalytics(),
         getPopularItems(),
         getPeakHours(),
         getTableOrders(),
-        getIngredientAnalytics(30)
+        getIngredientAnalytics(30),
+        getVisitors().catch(() => ({ data: 0 }))
       ]);
 
       setRevenue(revenueData.data);
@@ -73,6 +75,7 @@ const Analytics = () => {
       setPeakHours(hoursData.data || []);
       setTableOrders(tablesData.data || []);
       setIngredientStats(ingredientsData.data || []);
+      setVisitors(visitorsData?.data || 0);
     } catch (error) {
       console.error('Error loading analytics:', error);
     } finally {
@@ -253,6 +256,19 @@ const Analytics = () => {
           </div>
           <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
             <TrendingUp className="w-7 h-7 text-indigo-600" />
+          </div>
+        </div>
+
+        {/* Visitors Card */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-[0_2px_10px_rgb(0,0,0,0.02)] flex items-center justify-between group hover:border-violet-200 transition-colors md:col-span-3 lg:col-span-1">
+          <div>
+            <p className="text-sm font-semibold text-slate-500 mb-1">Total Visitors</p>
+            <h3 className="text-3xl font-bold text-slate-900 tracking-tight">
+              {visitors.toLocaleString()}
+            </h3>
+          </div>
+          <div className="w-14 h-14 bg-violet-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <Activity className="w-7 h-7 text-violet-600" />
           </div>
         </div>
       </div>

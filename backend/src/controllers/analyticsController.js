@@ -227,3 +227,33 @@ exports.getIngredientUsage = async (req, res) => {
     });
   }
 };
+
+const SiteAnalytics = require('../models/SiteAnalytics');
+
+// @desc    Record a site visit
+// @route   POST /api/analytics/visit
+// @access  Public
+exports.recordVisit = async (req, res) => {
+  try {
+    const analytics = await SiteAnalytics.findOneAndUpdate(
+      { metric: 'totalVisitors' },
+      { $inc: { value: 1 } },
+      { new: true, upsert: true }
+    );
+    res.status(200).json({ success: true, data: analytics });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Get total visitors
+// @route   GET /api/analytics/visitors
+// @access  Private (Owner)
+exports.getVisitors = async (req, res) => {
+  try {
+    const analytics = await SiteAnalytics.findOne({ metric: 'totalVisitors' });
+    res.status(200).json({ success: true, data: analytics ? analytics.value : 0 });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

@@ -47,6 +47,24 @@ export const login = async (credentials) => {
   }
 };
 
+export const updateKitchenStatus = async (isAvailable) => {
+  try {
+    const response = await api.put('/auth/status', { isAvailable });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+export const getKitchenStatus = async () => {
+  try {
+    const response = await api.get('/auth/kitchen-status');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 // Order APIs
 export const getOrders = async (filters = {}) => {
   try {

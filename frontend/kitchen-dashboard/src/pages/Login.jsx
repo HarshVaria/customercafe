@@ -5,8 +5,8 @@ import { ChefHat, Lock, User, AlertCircle, ArrowRight, Loader2 } from 'lucide-re
 
 const Login = ({ onLogin }) => {
   const [credentials, setCredentials] = useState({
-    username: 'kitchen',
-    password: 'kitchen123'
+    username: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

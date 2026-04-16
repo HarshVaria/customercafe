@@ -66,17 +66,25 @@ const MenuManagement = () => {
         amount: parseFloat(r.amount)
       }));
 
-      const itemData = {
-        ...formData,
-        price: parseFloat(formData.price),
-        preparationTime: parseInt(formData.preparationTime),
-        recipe: cleanedRecipe
-      };
+      const formPayload = new FormData();
+      formPayload.append('name', formData.name);
+      formPayload.append('description', formData.description);
+      formPayload.append('price', parseFloat(formData.price));
+      formPayload.append('category', formData.category);
+      formPayload.append('preparationTime', parseInt(formData.preparationTime));
+      formPayload.append('available', formData.available);
+      formPayload.append('recipe', JSON.stringify(cleanedRecipe));
+
+      if (formData.image instanceof File) {
+        formPayload.append('image', formData.image);
+      } else if (typeof formData.image === 'string' && formData.image !== '') {
+        formPayload.append('image', formData.image); // keep existing URL
+      }
 
       if (editingItem) {
-        await updateMenuItem(editingItem._id, itemData);
+        await updateMenuItem(editingItem._id, formPayload);
       } else {
-        await createMenuItem(itemData);
+        await createMenuItem(formPayload);
       }
 
       resetForm();
@@ -328,15 +336,18 @@ const MenuManagement = () => {
               </div>
 
               <div className="space-y-1.5 md:col-span-2">
-                <label className="text-sm font-semibold text-slate-700">Image URL</label>
+                <label className="text-sm font-semibold text-slate-700">Image Upload (S3)</label>
                 <div className="relative">
                   <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                   <input
-                    type="url"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                   />
+                  {typeof formData.image === 'string' && formData.image && (
+                    <p className="text-xs text-slate-500 mt-2">Current image: <a href={formData.image} target="_blank" rel="noreferrer" className="text-indigo-600 underline">View</a></p>
+                  )}
                 </div>
               </div>
             </div>

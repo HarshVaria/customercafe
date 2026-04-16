@@ -45,7 +45,10 @@ export const getMenuItems = async () => {
 
 export const createMenuItem = async (itemData) => {
   try {
-    const response = await api.post('/menu', itemData);
+    const isFormData = itemData instanceof FormData;
+    const response = await api.post('/menu', itemData, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : {}
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -54,7 +57,10 @@ export const createMenuItem = async (itemData) => {
 
 export const updateMenuItem = async (id, itemData) => {
   try {
-    const response = await api.put(`/menu/${id}`, itemData);
+    const isFormData = itemData instanceof FormData;
+    const response = await api.put(`/menu/${id}`, itemData, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : {}
+    });
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
@@ -118,6 +124,24 @@ export const getPopularItems = async () => {
 export const getPeakHours = async () => {
   try {
     const response = await api.get('/analytics/peak-hours');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+export const getVisitors = async () => {
+  try {
+    const response = await api.get('/analytics/visitors');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+export const getKitchenStatus = async () => {
+  try {
+    const response = await api.get('/auth/kitchen-status');
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
