@@ -6,8 +6,8 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# MUST BE DECLARED DURING BUILD STAGE FOR VITE
-ENV VITE_API_URL=http://cafe-alb-1154717937.ap-south-1.elb.amazonaws.com:5000
+# MUST BE DECLARED DURING# Provide ALB DNS here for production!
+ENV VITE_API_URL=http://3.109.152.88:5000
 ENV VITE_AWS_REGION=ap-south-1
 ENV VITE_AWS_S3_BUCKET_NAME=cloud-project-s3-unique
 
