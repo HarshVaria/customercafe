@@ -1,22 +1,22 @@
-\# Contactless Cafe Ordering System
+# Contactless Cafe Ordering System
 
 
 
-\## Prerequisites
+## Prerequisites
 
-\- Node.js (v18+)
+- Node.js (v18+)
 
-\- Docker Desktop
+- Docker Desktop
 
 
 
-\## Setup
+## Setup
 
 
 
 ```bash
 
-\# 1. Clone
+# 1. Clone
 
 git clone <repo-url>
 
@@ -24,13 +24,13 @@ cd contactless-cafe
 
 
 
-\# 2. Start MongoDB
+# 2. Start MongoDB
 
 docker-compose up -d
 
 
 
-\# 3. Backend
+# 3. Backend
 
 cd backend
 
@@ -44,7 +44,7 @@ npm run dev
 
 
 
-\# 4. Frontend (open 3 new terminals)
+# 4. Frontend (open 3 new terminals)
 
 cd frontend/customer-app \&\& npm install \&\& npm run dev
 
