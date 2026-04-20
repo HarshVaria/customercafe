@@ -5,6 +5,7 @@ import MenuManagement from '../components/MenuManagement';
 import Analytics from '../components/Analytics';
 import OrderHistory from '../components/OrderHistory';
 import Inventory from '../components/Inventory';
+import KitchenStaff from '../components/KitchenStaff';
 import { getKitchenStatus } from '../services/api';
 import { 
   BarChart3, 
@@ -56,6 +57,7 @@ const Dashboard = ({ onLogout }) => {
   const tabs = [
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'inventory', label: 'Inventory', icon: PackageSearch },
+    { id: 'staff', label: 'Kitchen Staff', icon: ChefHat },
     { id: 'qr', label: 'QR Codes', icon: QrCode },
     { id: 'menu', label: 'Menu', icon: Coffee },
     { id: 'orders', label: 'Orders', icon: ShoppingBag },
@@ -181,6 +183,7 @@ const Dashboard = ({ onLogout }) => {
         <div className="bg-white rounded-2xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-slate-100 p-6 min-h-[500px]">
           {activeTab === 'analytics' && <Analytics />}
           {activeTab === 'inventory' && <Inventory />}
+          {activeTab === 'staff' && <KitchenStaff />}
           {activeTab === 'qr' && <QRGenerator />}
           {activeTab === 'menu' && <MenuManagement />}
           {activeTab === 'orders' && <OrderHistory />}

@@ -171,3 +171,32 @@ exports.getKitchenStatus = async (req, res) => {
     });
   }
 };
+
+// @desc    Get All Kitchen Users (Owner Only)
+// @route   GET /api/auth/kitchen-users
+// @access  Private (Owner only)
+exports.getKitchenUsers = async (req, res) => {
+  try {
+    // Check if the user is an owner
+    if (req.user.role !== 'owner') {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to access this route'
+      });
+    }
+
+    const kitchenUsers = await User.find({ role: 'kitchen' })
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: kitchenUsers
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
