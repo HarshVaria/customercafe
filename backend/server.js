@@ -10,6 +10,9 @@ require('dotenv').config();
 
 const app = express();
 
+// Trust the Load Balancer (required for AWS ALB)
+app.set('trust proxy', 1);
+
 // ============ CORS FIX - MUST BE FIRST ============
 // Enable CORS for all origins in development
 app.use((req, res, next) => {
