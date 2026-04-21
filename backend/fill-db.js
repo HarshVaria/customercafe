@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 async function fill() {
-  const url = 'http://3.109.152.88:5000/api';
+  const url = 'http://localhost:5000/api';
   console.log("Registering admin...");
   let token;
   try {
